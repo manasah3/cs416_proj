@@ -82,6 +82,16 @@
         .axis-label {
             font-weight: bold;
         }
+        #indicator-list li {
+           cursor: pointer;
+           padding: 5px;
+           transition: background-color 0.3s;
+        }
+
+        #indicator-list li.active {
+           background-color: #d3d3d3; /* Light gray background for active item */
+           color: #000; /* Black text color for active item */
+        }
     </style>
 </head>
 <body onload="init()">
@@ -94,11 +104,9 @@
             <p>
                 The <strong>Legatum Prosperity Index</strong> is a comprehensive measure of global prosperity, evaluating and ranking countries based on various dimensions of prosperity and development. 
                 The 2023 Prosperity Index provides an in-depth assessment of 167 countries, reflecting their performance across a range of indicators.
-                Trial
             </p>
             <p>
                 The index covers twelve critical indicators:
-
                 <strong>  Click on an indicator to learn more: </strong>
                 <ul id="indicator-list">
                     <li data-indicator="safety_security"><strong>Safety & Security</strong>: Freedom from conflict, terrorism, and crime.</li>
@@ -195,13 +203,30 @@
             showSlide(currentSlide);
         }
 
-        document.getElementById('indicator-list').addEventListener('click', function(event) {
-            if (event.target && event.target.nodeName === 'LI') {
-                const indicator = event.target.getAttribute('data-indicator');
-                // Handle click event for each indicator.
-                console.log('Clicked on indicator:', indicator);
-            }
-        });
+        //document.getElementById('indicator-list').addEventListener('click', function(event) {
+        //    if (event.target && event.target.nodeName === 'LI') {
+        //        const indicator = event.target.getAttribute('data-indicator');
+        //        // Handle click event for each indicator.
+        //        console.log('Clicked on indicator:', indicator);
+        //    }
+        //});
+
+       document.getElementById('indicator-list').addEventListener('click', function(event) {
+        if (event.target && event.target.nodeName === 'LI') {
+            // Remove active class from all items
+            const items = document.querySelectorAll('#indicator-list li');
+            items.forEach(item => item.classList.remove('active'));
+
+            // Add active class to the clicked item
+            event.target.classList.add('active');
+
+            const indicator = event.target.getAttribute('data-indicator');
+            // Handle click event for each indicator
+            console.log('Clicked on indicator:', indicator);
+            // Implement the logic to navigate or show more details based on the indicator
+            alert('You clicked on ' + indicator + '. Implement your navigation or details here.');
+        }
+    });
 
         async function init() {
 
