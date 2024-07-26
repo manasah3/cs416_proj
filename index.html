@@ -150,6 +150,20 @@
 
     <script>
 
+        const indicatorDetails = {
+        safety_security: "Safety & Security: Freedom from conflict, terrorism, and crime.",
+        personal_freedom: "Personal Freedom: Rights to speech, assembly, and individual autonomy.",
+        governance: "Governance: Quality of democracy, rule of law, and government effectiveness.",
+        social_capital: "Social Capital: Strength of personal relationships and civic engagement.",
+        investment_environment: "Investment Environment: Conditions for private investment and credit access.",
+        enterprise_conditions: "Enterprise Conditions: Business environment and market competition.",
+        market_access_infrastructure: "Market Access & Infrastructure: Ease of trade and quality of infrastructure.",
+        economic_quality: "Economic Quality: Macroeconomic stability and employment quality.",
+        living_conditions: "Living Conditions: Standard of living and access to basic services.",
+        health: "Health: Population health and healthcare access.",
+        education: "Education: Quality and accessibility of education.",
+        natural_environment: "Natural Environment: Environmental quality and sustainability."
+    };
         let currentSlide = 0;
 
         function showSlide(n) 
@@ -164,19 +178,6 @@
            });
 
            document.getElementById('prevBtn').style.display = currentSlide === 0 ? 'none' : 'inline-block';
-
-           // Special logic for the "Next" button
-           //if (currentSlide === 1 || currentSlide === 2) {
-           //    document.getElementById('nextBtn').innerText = 'Go to Bubble Chart';
-           //    document.getElementById('nextBtn').onclick = goToBubbleChart;
-           //} else if (currentSlide == 0) {
-           //    document.getElementById('nextBtn').innerText = 'Next';
-           //    document.getElementById('nextBtn').style.display = 'inline-block';
-           //    document.getElementById('nextBtn').onclick = () => changeSlide(1);
-           //} else if (currentSlide == 3) {
-           //  document.getElementById('nextBtn').style.display = currentSlide === 3 ? 'none' : 'inline-block';
-           //}
-
 
            if (currentSlide === 0) {
                document.getElementById('nextBtn').innerText = 'Next';
@@ -211,7 +212,7 @@
         //    }
         //});
 
-       document.getElementById('indicator-list').addEventListener('click', function(event) {
+        document.getElementById('indicator-list').addEventListener('click', function(event) {
         if (event.target && event.target.nodeName === 'LI') {
             // Remove active class from all items
             const items = document.querySelectorAll('#indicator-list li');
@@ -221,10 +222,10 @@
             event.target.classList.add('active');
 
             const indicator = event.target.getAttribute('data-indicator');
-            // Handle click event for each indicator
-            console.log('Clicked on indicator:', indicator);
-            // Implement the logic to navigate or show more details based on the indicator
-            alert('You clicked on ' + indicator + '. Implement your navigation or details here.');
+
+            // Update the details section based on the clicked indicator
+            const details = indicatorDetails[indicator] || "Details not available.";
+            document.getElementById('indicator-description').innerText = details;
         }
     });
 
