@@ -130,6 +130,9 @@
             <p>
                 The data used in this index is sourced from international databases and surveys, ensuring a comprehensive and reliable view of global prosperity.
             </p>
+            <div id="indicator-details">
+                <p id="indicator-description">Click on an indicator to see details.</p>
+            </div>
         </div>
     </div>
     <div id="slide2" class="slide">
@@ -204,30 +207,22 @@
             showSlide(currentSlide);
         }
 
-        //document.getElementById('indicator-list').addEventListener('click', function(event) {
-        //    if (event.target && event.target.nodeName === 'LI') {
-        //        const indicator = event.target.getAttribute('data-indicator');
-        //        // Handle click event for each indicator.
-        //        console.log('Clicked on indicator:', indicator);
-        //    }
-        //});
-
         document.getElementById('indicator-list').addEventListener('click', function(event) {
-        if (event.target && event.target.nodeName === 'LI') {
-            // Remove active class from all items
-            const items = document.querySelectorAll('#indicator-list li');
-            items.forEach(item => item.classList.remove('active'));
+            if (event.target && event.target.nodeName === 'LI') {
+                // Remove active class from all items
+                const items = document.querySelectorAll('#indicator-list li');
+                items.forEach(item => item.classList.remove('active'));
 
-            // Add active class to the clicked item
-            event.target.classList.add('active');
+                // Add active class to the clicked item
+                event.target.classList.add('active');
 
-            const indicator = event.target.getAttribute('data-indicator');
+                const indicator = event.target.getAttribute('data-indicator');
 
-            // Update the details section based on the clicked indicator
-            const details = indicatorDetails[indicator] || "Details not available.";
-            document.getElementById('indicator-description').innerText = details;
-        }
-    });
+                // Update the details section based on the clicked indicator
+                const details = indicatorDetails[indicator] || "Details not available.";
+                document.getElementById('indicator-description').innerText = details;
+            }
+        });
 
         async function init() {
 
