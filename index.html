@@ -223,7 +223,8 @@
                 const indicator = event.target.getAttribute('data-indicator');
 
                 // Update the details section based on the clicked indicator
-                showDetails(indicator);
+                const details = indicatorDetails[indicator] || "Details not available.";
+                document.getElementById('indicator-description').innerText = details;
             }
         });
 
