@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>2023 Prosperity Pulse: Tracking Global Development</title>
+    <script src="https://d3js.org/d3.v6.min.js"></script>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(to right, #6a11cb, #2575fc);
+            color: white;
+            margin: 0;
+            padding: 0;
+        }
+        .title {
+            text-align: center;
+            margin: 20px 0;
+            font-size: 30px;
+            font-weight: bold;
+        }
+        .intro, .chart, .bubble_chart {
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            margin: 20px auto;
+            width: 100%;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        .pie_chart {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            padding: 20px;
+        } 
+        .slide {
+            display: none;
+            transition: opacity 0.5s;
+        }
+        .active-slide {
+            display: block;
+            opacity: 1;
+        }
+        .nav-buttons {
+            text-align: center;
+            margin: 20px;
+        }
+        .nav-buttons button {
+            background-color: #ffffff;
+            color: #6a11cb;
+            border: none;
+            padding: 10px 20px;
+            margin: 5px;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        .nav-buttons button:hover {
+            background-color: #6a11cb;
+            color: white;
+        }
+        .tooltip {
+            position: absolute;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 5px;
+            border-radius: 5px;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+        .bar {
+            cursor: pointer;
+            transition: fill 0.3s;
+        }
+        .bar:hover {
+            fill: #ff5733;
+        }
+        .axis-label {
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body onload="init()">
+    <div class="title">
+        <h1>2023 Prosperity Pulse: Tracking Global Development</h1>
+    </div>
+    <div id="slide1" class="slide active-slide">
+        <div class="intro">
+            <h2>Introduction</h2>
+            <p>
+                The <strong>Legatum Prosperity Index</strong> is a comprehensive measure of global prosperity, evaluating and ranking countries based on various dimensions of prosperity and development. 
+                The 2023 Prosperity Index provides an in-depth assessment of 167 countries, reflecting their performance across a range of indicators.
+            </p>
+            <p>
+                The index covers twelve critical indicators:
+
+                <strong>  Click on an indicator to learn more: </strong>
+                <ul id="indicator-list">
+                    <li data-indicator="safety_security"><strong>Safety & Security</strong>: Freedom from conflict, terrorism, and crime.</li>
+                    <li data-indicator="personal_freedom"><strong>Personal Freedom</strong>: Rights to speech, assembly, and individual autonomy.</li>
+                    <li data-indicator="governance"><strong>Governance</strong>: Quality of democracy, rule of law, and government effectiveness.</li>
+                    <li data-indicator="social_capital"><strong>Social Capital</strong>: Strength of personal relationships and civic engagement.</li>
+                    <li data-indicator="investment_environment"><strong>Investment Environment</strong>: Conditions for private investment and credit access.</li>
+                    <li data-indicator="enterprise_conditions"><strong>Enterprise Conditions</strong>: Business environment and market competition.</li>
+                    <li data-indicator="market_access_infrastructure"><strong>Market Access & Infrastructure</strong>: Ease of trade and quality of infrastructure.</li>
+                    <li data-indicator="economic_quality"><strong>Economic Quality</strong>: Macroeconomic stability and employment quality.</li>
+                    <li data-indicator="living_conditions"><strong>Living Conditions</strong>: Standard of living and access to basic services.</li>
+                    <li data-indicator="health"><strong>Health</strong>: Population health and healthcare access.</li>
+                    <li data-indicator="education"><strong>Education</strong>: Quality and accessibility of education.</li>
+                    <li data-indicator="natural_environment"><strong>Natural Environment</strong>: Environmental quality and sustainability.</li>
+                </ul>
+            </p>
+            <p>
+                This interactive dashboard provides insights into these indicators, allowing users to explore and compare data across different countries and regions. 
+                Utilize the visualizations to understand how different factors contribute to overall prosperity and development.
+            </p>
+            <p>
+                The data used in this index is sourced from international databases and surveys, ensuring a comprehensive and reliable view of global prosperity.
+            </p>
+        </div>
+    </div>
+    <div id="slide2" class="slide">
+        <div id="overview" class="chart"></div>
+        <div id="overview-explanation"></div>
+    </div>
+    <div id="slide3" class="slide">
+        <div id="details" class="pie_chart"></div>
+    </div>
+    <div id="slide4" class="slide">
+        <div id="bubble_chart" class="bubble_chart"></div>
+    </div>
+    <div id="tooltip" class="tooltip"></div>
+    <div class="nav-buttons">
+        <button id="prevBtn" onclick="changeSlide(-1)">Previous</button>
+        <button id="nextBtn" onclick="changeSlide(1)">Next</button>
+    </div>
+
+    <script>
+
+        let currentSlide = 0;
+
+        function showSlide(n) 
+        {
+           const slides = document.querySelectorAll('.slide');
+           if (n >= slides.length) currentSlide = 0;
+           if (n < 0) currentSlide = slides.length - 1;
+           slides.forEach((slide, index) => 
+           {
+              slide.classList.remove('active-slide');
+              if (index === currentSlide) slide.classList.add('active-slide');
+           });
+
+           document.getElementById('prevBtn').style.display = currentSlide === 0 ? 'none' : 'inline-block';
+
+           // Special logic for the "Next" button
+           //if (currentSlide === 1 || currentSlide === 2) {
+           //    document.getElementById('nextBtn').innerText = 'Go to Bubble Chart';
+           //    document.getElementById('nextBtn').onclick = goToBubbleChart;
+           //} else if (currentSlide == 0) {
+           //    document.getElementById('nextBtn').innerText = 'Next';
+           //    document.getElementById('nextBtn').style.display = 'inline-block';
+           //    document.getElementById('nextBtn').onclick = () => changeSlide(1);
+           //} else if (currentSlide == 3) {
+           //  document.getElementById('nextBtn').style.display = currentSlide === 3 ? 'none' : 'inline-block';
+           //}
+
+
+           if (currentSlide === 0) {
+               document.getElementById('nextBtn').innerText = 'Next';
+               document.getElementById('nextBtn').style.display = 'inline-block';
+               document.getElementById('nextBtn').onclick = () => changeSlide(1);
+           } else if (currentSlide === 1 || currentSlide === 2) {
+               document.getElementById('nextBtn').innerText = 'Go to Bubble Chart';
+               document.getElementById('nextBtn').onclick = goToBubbleChart;
+           } else if (currentSlide === 3) {
+               document.getElementById('nextBtn').innerText = 'Back to Overview';
+               document.getElementById('nextBtn').onclick = () => showSlide(5);
+
+               // Ensure Previous button is always visible on the bubble chart
+               document.getElementById('prevBtn').style.display = 'inline-block';
+           }
+        }
+
+        function changeSlide(n) {
+            showSlide(currentSlide += n);
+        }
+
+        function goToBubbleChart() {
+            currentSlide = 3; // Change to bubble chart slide index
+            showSlide(currentSlide);
+        }
+
+        document.getElementById('indicator-list').addEventListener('click', function(event) {
+            if (event.target && event.target.nodeName === 'LI') {
+                const indicator = event.target.getAttribute('data-indicator');
+                // Handle click event for each indicator.
+                console.log('Clicked on indicator:', indicator);
+            }
+        });
+
+        async function init() {
+
+            const margin = { top: 20, right: 30, bottom: 150, left: 50 };
+            const height = 400 - margin.top - margin.bottom;
+
+            // Load data
+            const data = await d3.csv('data.csv'); // Ensure this path matches your repository structure
+
+            // Calculate the dynamic width based on the number of countries
+            const width = data.length * 10;
+
+            // Define scales
+            const xScale = d3.scaleBand()
+                             .domain(data.map(d => d['Country']))
+                             .range([0, width])
+                             .padding(0.1);
+
+            const yScale = d3.scaleLinear()
+                             .domain([0, d3.max(data, d => +d['AveragScore'])])
+                             .range([height, 0]);
+
+            const colorScale = d3.scaleOrdinal(d3.schemeCategory10);
+
+            showSlide(currentSlide);
+
+            // Slide 1 : Overview Section - Bar Chart of Average Scores
+            createOverview(data);
+
+           //Slide 4 Bubble chart
+            createBubbleChart();
+
+            function createOverview(data) 
+            {
+                const svg = d3.select('#overview')
+                              .append('svg')
+                              .attr('width', width + margin.left + margin.right)
+                              .attr('height', height + margin.top + margin.bottom)
+                              .append('g')
+                              .attr('transform', `translate(${margin.left},${margin.top})`);
+
+                svg.selectAll('.bar')
+                   .data(data)
+                   .enter().append('rect')
+                   .attr('class', 'bar')
+                   .attr('x', d => xScale(d['Country']))
+                   .attr('y', d => yScale(+d['AveragScore']))
+                   .attr('width', xScale.bandwidth())
+                   .attr('height', d => height - yScale(+d['AveragScore']))
+                   .attr('fill', d => colorScale(d['Country']))
+                   .on('mouseover', function(event, d) {
+                       d3.select('#tooltip')
+                         .style('opacity', 1)
+                         .html(`Country: ${d['Country']}<br>Average Score: ${d['AveragScore']}`)
+                         .style('left', (event.pageX + 5) + 'px')
+                         .style('top', (event.pageY - 28) + 'px');
+                   })
+                   .on('mouseout', function() {
+                       d3.select('#tooltip')
+                         .style('opacity', 0);
+                   })
+                   .on('click', function(event, d) {
+                       createDetails(d);
+                       changeSlide(1);
+                   });
+
+                svg.append('g')
+                   .attr('class', 'x axis')
+                   .attr('transform', `translate(0,${height})`)
+                   .call(d3.axisBottom(xScale).tickSize(0))
+                   .selectAll("text")  
+                   .style("text-anchor", "end")
+                   .attr("dx", "-.8em")
+                   .attr("dy", ".15em")
+                   .attr("transform", "rotate(-65)");
+
+                svg.append('g')
+                   .attr('class', 'y axis')
+                   .call(d3.axisLeft(yScale));
+
+                svg.append('text')
+                   .attr('class', 'axis-label')
+                   .attr('x', width / 2)
+                   .attr('y', height + margin.bottom - 30 )
+                   .style('text-anchor', 'middle')
+                   .text('Country');
+
+                svg.append('text')
+                   .attr('class', 'axis-label')
+                   .attr('transform', 'rotate(-90)')
+                   .attr('x', -height / 2)
+                   .attr('y', -margin.left + 20)
+                   .style('text-anchor', 'middle')
+                   .text('Average Score');
+
+                d3.select('#overview-explanation')
+                  .html(`
+                      <p>
+                        This bar chart provides a clear visual summary of the average scores for different countries. 
+                        Each bar represents a specific country, and the height of each bar reflects that country's average score.
+                      </p>
+                      <p>
+                        To delve deeper, hover over the bars to see the precise values for each country. 
+                        For a more detailed exploration, click on a bar to navigate to the next slide, which provides in-depth information about that country's performance.
+                      </p>
+                      <p>
+                        You can also click the 'Go to BubbleChart' button to proceed directly to the bubble chart . 
+                        The bubble chart offers a different perspective, showing the relationship between multiple indicators for each country, where the size and color of the bubbles represent various data points.
+                    </p>
+                `);
+            }
+
+            function createDetails(data) 
+            {
+               const margin = { top: 20, right: 250, bottom: 40, left: 250 };
+               const width = 800 - margin.left - margin.right;
+               const height = 600 - margin.top - margin.bottom;
+               const radius = Math.min(width, height) / 2;
+
+               d3.select('#details').selectAll('*').remove();
+
+               const svg = d3.select('#details').append('svg')
+                             .attr('width', width + margin.left + margin.right)
+                             .attr('height', height + margin.top + margin.bottom)
+                             .append('g')
+                             .attr('transform', `translate(${margin.left + width / 2},${margin.top + height / 2})`);
+
+               //const colorScale = d3.scaleOrdinal(d3.schemeCategory10);
+               // Defining a custom color array to have different colors in Pie Chart
+               //const colorArray = ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd', '#8c564b', '#e377c2', '#7f7f7f', '#bcbd22', '#17becf'];
+               const colorArray = [
+                                   '#1f77b4', // Blue
+                                   '#ff7f0e', // Orange
+                                   '#2ca02c', // Green
+                                   '#d62728', // Red
+                                   '#9467bd', // Purple
+                                   '#8c564b', // Brown
+                                   '#e377c2', // Pink
+                                   '#7f7f7f', // Gray
+                                   '#bcbd22', // Olive
+                                   '#17becf', // Teal
+                                   '#9e9e9e', // Light Gray
+                                   '#f7b6d2'  // Light Pink
+                               ];
+
+               const detailData = data ? Object.keys(data).filter(key => key !== 'Country' && key !== 'AveragScore').map(indicator => ({
+                   indicator,
+                   value: +data[indicator]
+               })) : [];
+
+               pie = d3.pie().value(d => d.value);
+               arc = d3.arc().innerRadius(0).outerRadius(radius);
+               outerArc = d3.arc().innerRadius(radius + 10).outerRadius(radius + 10);
+
+               slices = svg.selectAll('path')
+                   .data(pie(detailData))
+                   .enter().append('path')
+                   .attr('d', arc)
+                   .attr('fill', (d, i) => colorArray[i % colorArray.length])
+                   .attr('stroke', '#fff')
+                   .attr('stroke-width', '2px');
+
+               svg.selectAll('text.score')
+                   .data(pie(detailData))
+                   .enter().append('text')
+                   .attr('transform', d => {
+                       const pos = outerArc.centroid(d);
+                       const x = pos[0] > 0 ? pos[0] + 10 : pos[0] - 10;
+                       const y = pos[1];
+                       return `translate(${x},${y})`;
+                   })
+                   .attr('dy', '0.35em')
+                   .attr('text-anchor', d => d.endAngle > Math.PI ? 'end' : 'start')
+                   .text(d => `${d.data.value}`)
+                   .style('font-size', '12px')
+                   .style('fill', 'white');
+
+               legend = d3.select('#details').append('svg')
+                   .attr('width', 200)
+                   .attr('height', height + margin.top + margin.bottom)
+                   .attr('class', 'legend')
+                   .append('g')
+                   .attr('transform', `translate(${margin.left - 200}, ${margin.top})`);
+
+               legendItems = legend.selectAll('.legend-item')
+                                   .data(detailData)
+                                   .enter().append('g')
+                                   .attr('class', 'legend-item')
+                                   .attr('transform', (d, i) => `translate(0, ${i * 25})`);
+
+               legendItems.append('rect')
+                          .attr('x', 0)
+                          .attr('width', 20)
+                          .attr('height', 20)
+                          //.style('fill', d => colorScale(d.indicator))
+                          .style('fill', (d, i) => colorArray[i % colorArray.length])
+                          .style('stroke', '#000')
+                          .style('stroke-width', '1px')
+                          .on('click', function(event, d) {
+                              isActive = d.active;
+                              d.active = !isActive;
+
+                              svg.selectAll('path')
+                                 .transition().duration(300)
+                                 .style('opacity', isActive ? 1 : 0.1);
+
+                              svg.selectAll('path')
+                                 .filter(p => p.data.indicator === d.indicator)
+                                 .transition().duration(300)
+                                 .style('opacity', 1);
+
+                              d3.selectAll('.legend-item rect')
+                                .style('opacity', isActive ? 1 : 0.2);
+                              d3.select(this).style('opacity', isActive ? 1 : 0.2);
+                           });
+
+               legendItems.append('text')
+                          .attr('x', 30)
+                          .attr('y', 15)
+                          .text(d => d.indicator)
+                          .style('font-size', '12px')
+                          .style('fill', 'white');
+
+               // Title
+               svg.append('text')
+                  .attr('x', 0)
+                  .attr('y', height / 2 - 10)
+                  .style('text-anchor', 'middle')
+                  .style('fill', 'white')
+                  .text(`Details for ${data ? data['Country'] : ''}`);
+
+               // Create annotations
+               svg.append('text')
+                  .attr('x', width / 2)
+                  .attr('y', height / 2 + 20) // Positioned below the legend
+                  .style('text-anchor', 'start')
+                  .style('fill', 'white')
+                  .style('font-size', '12px')
+                  .selectAll('tspan')
+                  .data([
+                      'Click on the legend items to toggle visibility of corresponding pie slices.',
+                      'The pie chart displays the data values for each indicator.',
+                      'Use the legend to explore different indicators.'
+                  ])
+                  .enter()
+                  .append('tspan')
+                  .attr('x', width / 2)
+                  .attr('dy', '1.2em') // Adjust the vertical spacing between lines
+                  .text(d => d);
+        }
+
+
+
+        async function createBubbleChart() 
+        {
+    const margin = { top: 20, right: 30, bottom: 50, left: 50 };
+    const width = 800 - margin.left - margin.right;
+    const height = 600 - margin.top - margin.bottom;
+
+    const data = await d3.csv('data.csv'); // Ensure this path matches your repository structure
+
+    // Prepare the data
+    const bubbleData = data.map(d => ({
+        Country: d['Country'],
+        Governance: +d['Governance'],
+        SocialCapital: +d['SocialCapital'],
+        EconomicQuality: +d['EconomicQuality']
+    }));
+
+    // Define scales
+    const xScale = d3.scaleLinear()
+                     .domain([0, d3.max(bubbleData, d => d['Governance'])])
+                     .range([0, width]);
+
+    const yScale = d3.scaleLinear()
+                     .domain([0, d3.max(bubbleData, d => d['SocialCapital'])])
+                     .range([height, 0]);
+
+    const radiusScale = d3.scaleLinear()
+                          .domain([0, d3.max(bubbleData, d => d['EconomicQuality'])])
+                          .range([5, 40]);
+
+    const colorScale = d3.scaleOrdinal(d3.schemeCategory10);
+
+    // Create SVG
+    const svg = d3.select('#bubble_chart').append('svg')
+                  .attr('width', width + margin.left + margin.right)
+                  .attr('height', height + margin.top + margin.bottom)
+                  .append('g')
+                  .attr('transform', `translate(${margin.left},${margin.top})`)
+                  .call(d3.zoom().on("zoom", function (event) {
+                      svg.attr("transform", event.transform);
+                  }));
+
+    // Add x-axis
+    svg.append('g')
+       .attr('transform', `translate(0,${height})`)
+       .call(d3.axisBottom(xScale).ticks(5))
+       .append('text')
+       .attr('x', width)
+       .attr('y', -10)
+       .style('text-anchor', 'end')
+       .text('Governance');
+
+    // Add y-axis
+    svg.append('g')
+       .call(d3.axisLeft(yScale).ticks(5))
+       .append('text')
+       .attr('x', -10)
+       .attr('y', 10)
+       .attr('dy', '.71em')
+       .style('text-anchor', 'end')
+       .text('Social Capital');
+
+    // Create bubbles
+    const bubbles = svg.selectAll('.bubble')
+                       .data(bubbleData)
+                       .enter().append('circle')
+                       .attr('class', 'bubble')
+                       .attr('cx', d => xScale(d['Governance']))
+                       .attr('cy', d => yScale(d['SocialCapital']))
+                       .attr('r', d => radiusScale(d['EconomicQuality']))
+                       .style('fill', d => colorScale(d['Country']))
+                       .style('stroke', '#000')
+                       .style('stroke-width', '1px')
+                       .on('mouseover', function(event, d) {
+                           d3.select('#tooltip')
+                             .style('opacity', 1)
+                             .html(`Country: ${d['Country']}<br>Governance: ${d['Governance']}<br>Social Capital: ${d['SocialCapital']}<br>Economic Quality: ${d['EconomicQuality']}`)
+                             .style('left', (event.pageX + 5) + 'px')
+                             .style('top', (event.pageY - 28) + 'px');
+                       })
+                       .on('mouseout', function() {
+                           d3.select('#tooltip')
+                             .style('opacity', 0);
+                       });
+
+    // Add annotations
+    svg.append('text')
+       .attr('x', width / 2)
+       .attr('y', height + margin.bottom - 20)
+       .style('text-anchor', 'middle')
+       .style('fill', 'white')
+       .style('font-size', '14px')
+       .text('Bubble Chart: Comparison of Governance vs. Social Capital with bubble size representing Economic Quality');
+
+    svg.append('text')
+       .attr('x', width / 2)
+       .attr('y', height + margin.bottom - 40)
+       .style('text-anchor', 'middle')
+       .style('fill', 'white')
+       .style('font-size', '12px')
+       .text('Hover over bubbles for details and use the x and y axes to compare countries across Governance and Social Capital.');
+
+    // Create legend
+    const legend = d3.select('#bubble_chart').append('svg')
+        .attr('width', 200)
+        .attr('height', height + margin.top + margin.bottom)
+        .attr('class', 'legend')
+        .append('g')
+        .attr('transform', `translate(${margin.left - 200}, ${margin.top})`); // Position legend to the left
+
+    const legendItems = legend.selectAll('.legend-item')
+        .data(colorScale.domain())
+        .enter().append('g')
+        .attr('class', 'legend-item')
+        .attr('transform', (d, i) => `translate(0, ${i * 25})`);
+
+    legendItems.append('rect')
+        .attr('x', 0)
+        .attr('width', 20)
+        .attr('height', 20)
+        .style('fill', d => colorScale(d))
+        .style('stroke', '#000')
+        .style('stroke-width', '1px')
+        .on('click', function(event, d) {
+            const isActive = d.active;
+            d.active = !isActive;
+
+            // Toggle bubble visibility
+            bubbles.transition().duration(300)
+                   .style('opacity', isActive ? 1 : 0.1);
+
+            bubbles.filter(b => b.Country === d)
+                   .transition().duration(300)
+                   .style('opacity', 1);
+
+            // Update legend opacity
+            d3.selectAll('.legend-item rect')
+              .style('opacity', isActive ? 1 : 0.2);
+            d3.select(this).style('opacity', isActive ? 1 : 0.2);
+        });
+
+    legendItems.append('text')
+        .attr('x', 30)
+        .attr('y', 15)
+        .text(d => d)
+        .style('font-size', '12px');
+
+    // Add subtle annotations below the legend
+    legend.append('text')
+        .attr('x', 0)
+        .attr('y', legendItems.size() * 25 + 20) // Position below the last legend item
+        .attr('class', 'annotation')
+        .style('text-anchor', 'start')
+        .style('fill', 'white')
+        .style('font-size', '12px')
+        .text('Click on the legend items to toggle visibility of corresponding bubbles. Use the x and y axes to compare countries across Governance and Social Capital.');
+}
+
+}
+    </script>
+</body>
+</html>
