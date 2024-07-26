@@ -82,11 +82,20 @@
         .axis-label {
             font-weight: bold;
         }
+        #indicator-list li.active {
+          background-color: #ddd; /* Highlight color for active item */
+          font-weight: bold;
+        }
         #indicator-details {
-            margin-top: 20px;
-            padding: 10px;
-            border: 1px solid #ddd;
-            background-color: #f9f9f9;
+          margin-top: 20px;
+          padding: 10px;
+          border: 2px solid #007bff; /* Border color for the details section */
+          background-color: #e9f5ff; /* Background color for the details section */
+          border-radius: 5px; /* Rounded corners for the details section */
+        }
+        #indicator-description {
+          color: #333; /* Text color for the details */
+          font-size: 1.1em; /* Slightly larger font size for better readability */
         }
     </style>
 </head>
@@ -107,15 +116,15 @@
                     <li data-indicator="safety_security"><strong>Safety & Security</strong></li>
                     <li data-indicator="personal_freedom"><strong>Personal Freedom</strong></li>
                     <li data-indicator="governance"><strong>Governance</strong></li>
-                    <li data-indicator="social_capital"><strong>Social Capital</strong>: Strength of personal relationships and civic engagement.</li>
-                    <li data-indicator="investment_environment"><strong>Investment Environment</strong>: Conditions for private investment and credit access.</li>
-                    <li data-indicator="enterprise_conditions"><strong>Enterprise Conditions</strong>: Business environment and market competition.</li>
-                    <li data-indicator="market_access_infrastructure"><strong>Market Access & Infrastructure</strong>: Ease of trade and quality of infrastructure.</li>
-                    <li data-indicator="economic_quality"><strong>Economic Quality</strong>: Macroeconomic stability and employment quality.</li>
-                    <li data-indicator="living_conditions"><strong>Living Conditions</strong>: Standard of living and access to basic services.</li>
-                    <li data-indicator="health"><strong>Health</strong>: Population health and healthcare access.</li>
-                    <li data-indicator="education"><strong>Education</strong>: Quality and accessibility of education.</li>
-                    <li data-indicator="natural_environment"><strong>Natural Environment</strong>: Environmental quality and sustainability.</li>
+                    <li data-indicator="social_capital"><strong>Social Capital</strong></li>
+                    <li data-indicator="investment_environment"><strong>Investment Environment</strong></li>
+                    <li data-indicator="enterprise_conditions"><strong>Enterprise Conditions</strong></li>
+                    <li data-indicator="market_access_infrastructure"><strong>Market Access & Infrastructure</strong></li>
+                    <li data-indicator="economic_quality"><strong>Economic Quality</strong></li>
+                    <li data-indicator="living_conditions"><strong>Living Conditions</strong></li>
+                    <li data-indicator="health"><strong>Health</strong></li>
+                    <li data-indicator="education"><strong>Education</strong></li>
+                    <li data-indicator="natural_environment"><strong>Natural Environment</strong></li>
                 </ul>
             </p>
             <p>
