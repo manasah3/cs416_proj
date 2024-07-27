@@ -461,7 +461,7 @@
                // Create annotations
                svg.append('text')
                   .attr('x', width / 2)
-                  .attr('y', height / 2 + 20) // Positioned below the legend
+                  .attr('y', height / 2 + 10) // Positioned below the legend
                   .style('text-anchor', 'start')
                   .style('fill', 'white')
                   .style('font-size', '12px')
@@ -480,9 +480,9 @@
 
 
         async function createBubbleChart() {
-    const margin = { top: 20, right: 200, bottom: 50, left: 50 }; // Increased right margin for annotations and legend
-    const width = 900 - margin.left - margin.right; // Increased width
-    const height = 700 - margin.top - margin.bottom; // Increased height
+    const margin = { top: 20, right: 200, bottom: 50, left: 200 }; // Increased left margin for annotations
+    const width = 900 - margin.left - margin.right; // Adjusted width
+    const height = 700 - margin.top - margin.bottom; // Adjusted height
 
     const data = await d3.csv('data.csv'); // Ensure this path matches your repository structure
 
@@ -571,11 +571,11 @@
                              .style('opacity', 0);
                        });
 
-    // Add annotations to the right
+    // Add annotations to the left
     const annotations = [
-        { text: '• Bubble size represents Economic Quality', x: width + 10, y: 40 },
-        { text: '• Hover over bubbles for more info', x: width + 10, y: 60 },
-        { text: '• Use axes to compare countries', x: width + 10, y: 80 },
+        { text: '• Bubble size represents Economic Quality', x: -180, y: 40 },
+        { text: '• Hover over bubbles for more info', x: -180, y: 60 },
+        { text: '• Use axes to compare countries', x: -180, y: 80 },
     ];
 
     svg.selectAll('.annotation')
