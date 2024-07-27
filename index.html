@@ -329,12 +329,12 @@
                         Each bar represents a specific country, and the height of each bar reflects that country's average score.
                       </p>
                       <p>
-                        To delve deeper, hover over the bars to see the precise values for each country. 
-                        For a more detailed exploration, click on a bar to navigate to the next slide, which provides in-depth information about that country's performance.
+                        To delve deeper, hover over the bars to see the precise Average Scores for each country. 
+                        For a more detailed exploration, click on a bar to navigate to the next slide, which provides in-depth information about that country's performance across different Prosperity Indicators.
                       </p>
                       <p>
                         You can also click the 'Go to BubbleChart' button to proceed directly to the bubble chart . 
-                        The bubble chart offers a different perspective, showing the relationship between multiple indicators for each country, where the size and color of the bubbles represent various data points.
+                        The bubble chart offers a different perspective, showing the relationship between three indicators for each country, where the size and color of the bubbles represent various data points.
                     </p>
                 `);
             }
@@ -480,7 +480,7 @@
 
 
         async function createBubbleChart() {
-    const margin = { top: 20, right: 150, bottom: 50, left: 50 }; // Adjust right margin for annotations and legend
+    const margin = { top: 20, right: 200, bottom: 50, left: 50 }; // Increased right margin for annotations and legend
     const width = 900 - margin.left - margin.right; // Increased width
     const height = 700 - margin.top - margin.bottom; // Increased height
 
@@ -591,7 +591,7 @@
 
     // Create legend
     const legend = svg.append('g')
-        .attr('transform', `translate(${width + 10}, 20)`); // Position legend to the right
+        .attr('transform', `translate(${width + 50}, 20)`); // Position legend farther to the right
 
     const legendItems = legend.selectAll('.legend-item')
         .data(colorScale.domain())
@@ -607,20 +607,21 @@
         .style('stroke', '#000')
         .style('stroke-width', '1px')
         .on('click', function(event, d) {
-            const isActive = d.active;
-            d.active = !isActive;
+            const isActive = d.active = !d.active;
 
             // Toggle bubble visibility
             bubbles.transition().duration(300)
-                   .style('opacity', isActive ? 1 : 0.1);
+                   .style('opacity', 0.1);
 
-            bubbles.filter(b => b.Country === d)
-                   .transition().duration(300)
-                   .style('opacity', 1);
+            if (isActive) {
+                bubbles.filter(b => b.Country === d)
+                       .transition().duration(300)
+                       .style('opacity', 1);
+            }
 
             // Update legend opacity
             d3.selectAll('.legend-item rect')
-              .style('opacity', isActive ? 1 : 0.2);
+              .style('opacity', 0.2);
             d3.select(this).style('opacity', isActive ? 1 : 0.2);
         });
 
