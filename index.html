@@ -480,9 +480,9 @@
 
 
         async function createBubbleChart() {
-    const margin = { top: 20, right: 200, bottom: 50, left: 50 }; // Adjust right margin for annotations
-    const width = 800 - margin.left - margin.right;
-    const height = 600 - margin.top - margin.bottom;
+    const margin = { top: 20, right: 150, bottom: 50, left: 50 }; // Adjust right margin for annotations and legend
+    const width = 900 - margin.left - margin.right; // Increased width
+    const height = 700 - margin.top - margin.bottom; // Increased height
 
     const data = await d3.csv('data.csv'); // Ensure this path matches your repository structure
 
@@ -591,7 +591,7 @@
 
     // Create legend
     const legend = svg.append('g')
-        .attr('transform', `translate(${width + 20}, 20)`); // Position legend to the right
+        .attr('transform', `translate(${width + 10}, 20)`); // Position legend to the right
 
     const legendItems = legend.selectAll('.legend-item')
         .data(colorScale.domain())
@@ -601,8 +601,8 @@
 
     legendItems.append('rect')
         .attr('x', 0)
-        .attr('width', 20)
-        .attr('height', 20)
+        .attr('width', 15) // Reduced size of legend squares
+        .attr('height', 15) // Reduced size of legend squares
         .style('fill', d => colorScale(d))
         .style('stroke', '#000')
         .style('stroke-width', '1px')
@@ -625,8 +625,8 @@
         });
 
     legendItems.append('text')
-        .attr('x', 30)
-        .attr('y', 15)
+        .attr('x', 20) // Adjusted x position for text
+        .attr('y', 12) // Adjusted y position for text
         .text(d => d)
         .style('font-size', '12px');
 
