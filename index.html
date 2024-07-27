@@ -101,16 +101,19 @@
             display: flex;
             align-items: flex-start;
             overflow: hidden;
-            height: 700px; /* Set height for both containers */
+            //height: 700px; /* Set height for both containers */
+            width: 100vw; /* Full width of the viewport */
+            height: 100vh; /* Full height of the viewport */
         }
-
         #bubble_chart {
+            flex: 1;
             position: relative;
+            overflow: auto;
         }
         #legend-container {
             width: 300px; /* Adjust width as needed */
-            height: 700%;
-            overflow-y: auto; /* Make legend container scrollable */
+            height: 100vh;
+            overflow-y: auto;
             border-left: 1px solid #ccc;
             padding: 10px;
         }
