@@ -478,11 +478,8 @@
                   .text(d => d);
         }
 
-
-
-        async function createBubbleChart() 
-        {
-    const margin = { top: 20, right: 30, bottom: 50, left: 50 };
+        async function createBubbleChart() {
+    const margin = { top: 20, right: 200, bottom: 50, left: 50 }; // Adjust right margin for annotations
     const width = 800 - margin.left - margin.right;
     const height = 600 - margin.top - margin.bottom;
 
@@ -524,21 +521,29 @@
     // Add x-axis
     svg.append('g')
        .attr('transform', `translate(0,${height})`)
-       .call(d3.axisBottom(xScale).ticks(5))
-       .append('text')
-       .attr('x', width)
-       .attr('y', -10)
-       .style('text-anchor', 'end')
+       .call(d3.axisBottom(xScale).ticks(5));
+
+    // Add x-axis label
+    svg.append('text')
+       .attr('x', width / 2)
+       .attr('y', height + margin.bottom - 10)
+       .style('text-anchor', 'middle')
+       .style('fill', 'white')
+       .style('font-size', '14px')
        .text('Governance');
 
     // Add y-axis
     svg.append('g')
-       .call(d3.axisLeft(yScale).ticks(5))
-       .append('text')
-       .attr('x', -10)
-       .attr('y', 10)
-       .attr('dy', '.71em')
-       .style('text-anchor', 'end')
+       .call(d3.axisLeft(yScale).ticks(5));
+
+    // Add y-axis label
+    svg.append('text')
+       .attr('transform', 'rotate(-90)')
+       .attr('x', -height / 2)
+       .attr('y', -margin.left + 20)
+       .style('text-anchor', 'middle')
+       .style('fill', 'white')
+       .style('font-size', '14px')
        .text('Social Capital');
 
     // Create bubbles
@@ -580,6 +585,25 @@
        .style('fill', 'white')
        .style('font-size', '12px')
        .text('Hover over bubbles for details and use the x and y axes to compare countries across Governance and Social Capital.');
+
+    // Add annotations to the right
+    const annotations = [
+        { text: 'Annotations:', x: width + 10, y: 20 },
+        { text: '• Bubble size represents Economic Quality', x: width + 10, y: 40 },
+        { text: '• Hover over bubbles for more info', x: width + 10, y: 60 },
+        { text: '• Use axes to compare countries', x: width + 10, y: 80 },
+    ];
+
+    svg.selectAll('.annotation')
+       .data(annotations)
+       .enter().append('text')
+       .attr('class', 'annotation')
+       .attr('x', d => d.x)
+       .attr('y', d => d.y)
+       .style('text-anchor', 'start')
+       .style('fill', 'white')
+       .style('font-size', '12px')
+       .text(d => d.text);
 
     // Create legend
     const legend = d3.select('#bubble_chart').append('svg')
@@ -636,6 +660,8 @@
         .style('font-size', '12px')
         .text('Click on the legend items to toggle visibility of corresponding bubbles. Use the x and y axes to compare countries across Governance and Social Capital.');
 }
+
+
 
 }
     </script>
