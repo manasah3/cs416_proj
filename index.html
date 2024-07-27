@@ -478,6 +478,7 @@
                           .attr('y', 15)
                           .text(d => d.indicator)
                           .style('font-size', '12px')
+                          .style('fill', 'black')
                           .style('fill', 'white');
 
                // Title
@@ -504,7 +505,7 @@
                   ])
                   .enter()
                   .append('tspan')
-                  .attr('x', width / 2 - 20)
+                  .attr('x', width)
                   .attr('dy', '1.2em') // Adjust the vertical spacing between lines
                   .text(d => d);
         }
