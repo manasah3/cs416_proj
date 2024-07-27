@@ -18,7 +18,7 @@
             font-size: 30px;
             font-weight: bold;
         }
-        .intro, .chart, .bubble_chart {
+        .intro, .chart{
             padding: 20px;
             background-color: rgba(255, 255, 255, 0.1);
             border-radius: 8px;
@@ -97,6 +97,23 @@
           color: #333; /* Text color for the details */
           font-size: 1.1em; /* Slightly larger font size for better readability */
         }
+        #chart-container {
+            display: flex;
+            align-items: flex-start;
+            height: 700px; /* Set height for both containers */
+        }
+
+        #bubble_chart {
+            flex: 3; /* Take more space */
+            position: relative;
+        }
+        #legend-container {
+            width: 300px; /* Adjust width as needed */
+            height: 100%;
+            overflow-y: auto; /* Make legend container scrollable */
+            border-left: 1px solid #ccc;
+            padding: 10px;
+        }
         #legend-container {
             height: 500px; /* Adjust height as needed */
             overflow-y: scroll;
@@ -160,7 +177,8 @@
     <div id="slide3" class="slide">
         <div id="details" class="pie_chart"></div>
     </div>
-    <div id="slide4" class="slide">
+    //<div id="slide4" class="slide">
+    <div id="chart-container" class="slide">
         <div id="bubble_chart" class="bubble_chart"></div>
         <div id="legend-container"></div>
     </div>
@@ -493,11 +511,10 @@
                   .text(d => d);
         }
 
-
         async function createBubbleChart() {
-            const margin = { top: 20, right: 50, bottom: 50, left: 200 }; // Adjusted right margin
-            const width = 900 - margin.left - margin.right; // Adjusted width
-            const height = 700 - margin.top - margin.bottom; // Adjusted height
+            const margin = { top: 20, right: 20, bottom: 50, left: 50 };
+            const width = 900 - margin.left - margin.right;
+            const height = 700 - margin.top - margin.bottom;
 
             const data = await d3.csv('data.csv'); // Ensure this path matches your repository structure
 
@@ -611,8 +628,8 @@
             const legendContainer = d3.select('#legend-container');
 
             const legend = legendContainer.append('svg')
-                .attr('width', 200)
-                .attr('height', 500); // Adjusted height for scrolling
+                .attr('width', 300) // Set width for legend SVG
+                .attr('height', 700); // Set height for legend SVG
 
             const legendItems = legend.selectAll('.legend-item')
                 .data(colorScale.domain())
@@ -622,8 +639,8 @@
 
             legendItems.append('rect')
                 .attr('x', 0)
-                .attr('width', 15) // Reduced size of legend squares
-                .attr('height', 15) // Reduced size of legend squares
+                .attr('width', 15) // Size of legend squares
+                .attr('height', 15) // Size of legend squares
                 .style('fill', d => colorScale(d))
                 .style('stroke', '#000')
                 .style('stroke-width', '1px')
@@ -674,7 +691,6 @@
                 .style('font-size', '12px')
                 .text('Click on the legend items to toggle visibility of corresponding bubbles. Use the x and y axes to compare countries across Governance and Social Capital.');
         }
-
 
 }
     </script>
