@@ -490,9 +490,8 @@
                   .style('fill', 'white')
                   .text(`Details for ${data ? data['Country'] : ''}`);
 
-               // Create annotations
                svg.append('text')
-                  .attr('x', width / 2 - 10 )
+                  .attr('x', width / 2 - 30)
                   .attr('y', height / 2 - 10) // Positioned below the legend
                   .style('text-anchor', 'start')
                   .style('font-size', '12px')
