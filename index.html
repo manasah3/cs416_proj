@@ -495,6 +495,7 @@
                   .style('text-anchor', 'start')
                   .style('fill', 'white')
                   .style('font-size', '12px')
+                  .style('fill', 'black')
                   .selectAll('tspan')
                   .data([
                       'Click on the legend items to toggle visibility of corresponding pie slices.',
@@ -503,7 +504,7 @@
                   ])
                   .enter()
                   .append('tspan')
-                  .attr('x', width / 2 - 10)
+                  .attr('x', width / 2 - 20)
                   .attr('dy', '1.2em') // Adjust the vertical spacing between lines
                   .text(d => d);
         }
@@ -604,10 +605,15 @@
                                });
 
             // Add annotations to the left
+            //const annotations = [
+            //    { text: '• Bubble size represents Economic Quality', x: -180, y: 40 },
+            //    { text: '• Hover over bubbles for more info', x: -180, y: 60 },
+            //    { text: '• Use axes to compare countries', x: -180, y: 80 },
+            //];
             const annotations = [
-                { text: '• Bubble size represents Economic Quality', x: -180, y: 40 },
-                { text: '• Hover over bubbles for more info', x: -180, y: 60 },
-                { text: '• Use axes to compare countries', x: -180, y: 80 },
+             { text: '• Bubble size represents Economic Quality', x: width + 20, y: 40 },
+             { text: '• Hover over bubbles for more info', x: width + 20, y: 60 },
+             { text: '• Use axes to compare countries', x: width + 20, y: 80 },
             ];
 
             svg.selectAll('.annotation')
@@ -618,7 +624,7 @@
                .attr('y', d => d.y)
                .style('text-anchor', 'start')
                .style('fill', 'black')  // Changed to black for visibility
-               .style('font-size', '12px')
+               .style('font-size', '14px')
                .text(d => d.text);
 
             // Create legend
@@ -678,15 +684,6 @@
                 .text(d => d)
                 .style('font-size', '12px');
 
-            // Add subtle annotations below the legend
-            legend.append('text')
-                .attr('x', 0)
-                .attr('y', legendItems.size() * 20 + 20) // Position below the last legend item
-                .attr('class', 'annotation')
-                .style('text-anchor', 'start')
-                .style('fill', 'black')  // Changed to black for visibility
-                .style('font-size', '12px')
-                .text('Click on the legend items to toggle visibility of corresponding bubbles. Use the x and y axes to compare countries across Governance and Social Capital.');
         }
 
 }
