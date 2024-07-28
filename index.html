@@ -82,9 +82,14 @@
         .axis-label {
             font-weight: bold;
         }
+        #indicator-list li {
+           cursor: pointer;
+        }
         #indicator-list li.active {
-          background-color: #ddd; /* Highlight color for active item */
-          font-weight: bold;
+          //background-color: #ddd; /* Highlight color for active item */
+          //font-weight: bold;
+          background-color: rgba(0, 0, 0, 0.5);
+          color: #fff;
         }
         #indicator-details {
           margin-top: 20px;
@@ -244,11 +249,9 @@
 
         document.getElementById('indicator-list').addEventListener('click', function(event) {
             if (event.target && event.target.nodeName === 'LI') {
-                // Remove active class from all items
                 const items = document.querySelectorAll('#indicator-list li');
                 items.forEach(item => item.classList.remove('active'));
 
-                // Add active class to the clicked item
                 event.target.classList.add('active');
 
                 const indicator = event.target.getAttribute('data-indicator');
