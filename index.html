@@ -168,7 +168,7 @@
                 The data used in this index is sourced from international databases and surveys, ensuring a comprehensive and reliable view of global prosperity.
             </p>
             <div id="indicator-details">
-                <p id="indicator-description">Click after an indicatori name to see details.</p>
+                <p id="indicator-description">Click after an indicator name to see details.</p>
             </div>
         </div>
     </div>
@@ -386,7 +386,7 @@
                              .attr('width', width + margin.left + margin.right)
                              .attr('height', height + margin.top + margin.bottom)
                              .append('g')
-                             .attr('transform', `translate(${margin.left - 200},${margin.top})`);
+                             .attr('transform', `translate(${margin.left + width / 2},${margin.top + height / 2})`);
 
                //const colorScale = d3.scaleOrdinal(d3.schemeCategory10);
                // Defining a custom color array to have different colors in Pie Chart
@@ -440,7 +440,7 @@
 
                legend = d3.select('#details').append('svg')
                    .attr('width', 200)
-                   .attr('height', height + margin.top + margin.bottom )
+                   .attr('height', height + margin.top + margin.bottom)
                    .attr('class', 'legend')
                    .append('g')
                    .attr('transform', `translate(${margin.left - 200}, ${margin.top})`);
@@ -493,26 +493,25 @@
                   .style('fill', 'white')
                   .text(`Details for ${data ? data['Country'] : ''}`);
 
-               const annotationSvg = d3.select('#details').append('svg')
-                                       .attr('width', width + margin.left + margin.right)
-                                       .attr('height', 100) // Height for annotations
-                                       .append('g')
-                                       .attr('transform', `translate(${margin.left}, 20)`);
-
-               annotationSvg.selectAll('tspan')
-                            .data([
-                                'Click on the legend items to toggle visibility of corresponding pie slices.',
-                                'The pie chart displays the data values for each indicator.',
-                                'Use the legend to explore different indicators.'
-                            ])
-                            .enter()
-                            .append('tspan')
-                            .attr('x', 0)
-                            .attr('dy', '1.2em') // Adjust the vertical spacing between lines
-                            .style('font-size', '12px')
-                            .style('fill', 'black')
-                            .text(d => d);
-        
+               // Create annotations
+               svg.append('text')
+                  .attr('x', width / 2 - 10 )
+                  .attr('y', height / 2 - 10) // Positioned below the legend
+                  .style('text-anchor', 'start')
+                  .style('fill', 'white')
+                  .style('font-size', '12px')
+                  .style('fill', 'black')
+                  .selectAll('tspan')
+                  .data([
+                      'Click on the legend items to toggle visibility of corresponding pie slices.',
+                      'The pie chart displays the data values for each indicator.',
+                      'Use the legend to explore different indicators.'
+                  ])
+                  .enter()
+                  .append('tspan')
+                  .attr('x', width/2 - 30)
+                  .attr('dy', '1.2em') // Adjust the vertical spacing between lines
+                  .text(d => d);        
     }
 
         async function createBubbleChart() {
