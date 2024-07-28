@@ -439,8 +439,9 @@
                    .style('fill', 'white');
 
                legend = d3.select('#details').append('svg')
-                   .attr('width', 200)
-                   .attr('height', height + margin.top + margin.bottom)
+                   //.attr('width', 200)
+                   .attr('width', width + margin.left + margin.right))
+                   .attr('height', height + margin.top + margin.bottom + 100)
                    .attr('class', 'legend')
                    .append('g')
                    .attr('transform', `translate(${margin.left - 200}, ${margin.top})`);
@@ -494,8 +495,9 @@
                   .text(`Details for ${data ? data['Country'] : ''}`);
 
                svg.append('text')
-                  .attr('x', width / 2 - 30)
-                  .attr('y', height / 2 - 10) // Positioned below the legend
+                  //.attr('x', width / 2 - 30)
+                  .attr('x', -width / 2 )
+                  .attr('y', height / 2 + 30) // Positioned below the legend
                   .style('text-anchor', 'start')
                   .style('font-size', '12px')
                   .style('fill', 'black')
@@ -507,7 +509,8 @@
                   ])
                   .enter()
                   .append('tspan')
-                  .attr('x', width/2 - 30)
+                  //.attr('x', width/2 - 30)
+                  .attr('x', -width/2)
                   .attr('dy', '1.2em') // Adjust the vertical spacing between lines
                   .text(d => d);
         }
